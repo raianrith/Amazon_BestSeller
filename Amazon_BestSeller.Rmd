@@ -1,0 +1,84 @@
+---
+title: "Amazon's Books Bestsellers for the Past Decade"
+author: "Raian Rith"
+data: Jan 15, 2020
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+Amazon_Top50 <- read_csv("bestsellers with categories.csv")
+
+```
+
+  Over the years, Amazon has become America's leading online marketplace for literally anything. One of those products are books. All of us have purchased books from Amazon at least once in our lives. Maybe it was for school; maybe it was a gift; maybe it was actually for ourselves to just read for fun. It’s inevitable; Amazon’s prices are so low and their website is so accessible that it’s logically the best market for a consumer to buy from. So, what kind of books do most people buy? Fictions or Non Fictions? Surely, the Amazon bestsellers are classics like Balzac's Lives by Peter Brooks or the best Non-Fictions like Silent Spring by Rachel Carson, right? You would be surprised to know that that is not the case. This short blog post answers these questions through a Data Analytic study of a Data set on Amazon's Top 50 bestselling books from 2009 to 2019. It contains 550 books, in which data has been categorized into fiction and non-fiction using Goodreads. I found this interesting data set on Kaggle at  "https://www.kaggle.com/sootersaalu/amazon-top-50-bestselling-books-2009-2019/discussion".
+
+```{r, fig.height=4, fig.width=6}
+bestseller_userRating <- Amazon_Top50 %>%
+  arrange(desc(`User Rating`)) %>%
+  group_by(Year) %>%
+  slice(1)
+
+```
+
+
+```{r, fig.height=4, fig.width=6}
+# Libraries
+library(ggplot2)
+library(plotly)
+library(hrbrthemes)
+library(ggthemes)
+
+# Horizontal version
+a <- ggplot(bestseller_userRating, aes(x = Year, y = Price)) +
+ geom_point(aes(size= Reviews, stroke = Name, color = Genre)) + theme_bw() + theme(legend.position = "none") + 
+ scale_x_continuous(breaks = c(2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019)) + 
+  geom_segment( aes(x=Year, xend=Year, y=0, yend=Price)) + 
+  ggtitle("Amazon Books Bestsellers for the Past Decade") +
+  xlab("Year") + ylab("Price")
+  
+ggplotly(a)  
+```
+
+The interactive graph above looks pretty simple, but conveys a lot of information. Some of which is very interesting. The interactive lollipop graph shows the bestselling books for each year over the past decade based on user ratings. The points are separated by color which represent the genre of the books. We see that 7 of the 11 best selling books of the past 11 years have been Fictions, while 4 were Non-Fictions. Plus one! for the Fiction lovers! According to the graph, the best sellers for each year are as follows: 
+
+2009: Diary of A Wimpy Kid - The Last Straw (Book 3) by Jeff Kinney 
+
+2010: Percy Jackson and the Olympians Paperback Boxed Set (Books 1-3)	by Rick Riordan 
+
+2011: Jesus Calling: Enjoying Peace in His Presence (with Scripture References)	by Sarah Young 
+
+2012: Goodnight, Goodnight Construction Site (Hardcover Books for Toddlers, Preschool Books for Kids)	by Sherri Duskey Rinker	 
+
+2013: Goodnight, Goodnight Construction Site (Hardcover Books for Toddlers, Preschool Books for Kids)	by Sherri Duskey Rinker	 
+
+2014: Jesus Calling: Enjoying Peace in His Presence (with Scripture References) by	Sarah Young	 
+
+2015: Humans of New York : Stories by	Brandon Stanton	 
+
+2016: Hamilton: The Revolution by	Lin-Manuel Miranda	 
+
+2017: Brown Bear, Brown Bear, What Do You See? by	Bill Martin Jr.	 
+
+2018: Dog Man and Cat Kid: From the Creator of Captain Underpants (Dog Man #4) by	Dav Pilkey 
+
+2019: Brown Bear, Brown Bear, What Do You See? by	Bill Martin Jr. 
+
+
+As we can see, Goodnight, Goodnight Construction Site by Sherri Duskey Rinker was the Amazon best-seller for 2 consecutive years (2012-2013) and so was Brown Bear, Brown Bear, What Do You See? by	Bill Martin Jr during the years 2017 and 2019 and Jesus Calling: Enjoying Peace in His Presence (with Scripture References)	by Sarah Young during the years 2011 and 2014. One surely would not have expected children books to be Amazons top sellers right? I was surprised too! When it comes to price, we see that most of the books are under 20 USD, some of them are even under 8 USD. The cheapest best seller was Percy Jackson and the Olympians Paperback Boxed Set (Books 1-3)	by Rick Riordan with a price of USD 2 during the year 2010. The most expensive book on our list was Hamilton: The Revolution by	Lin-Manuel Miranda with a price of USD 54 during the year 2016. The prices of the best seller gives off the impression that most people who buy books on Amazon look for less expensive books. 
+
+What makes this graph interesting, is that it is interactive. As we hover over the points, it reveals the Name, Price, Number of Reviews received, Year, and Genre of the books. The size of the points are based on the number of reviews the movie received. It becomes more clear, when we hover over the points, to look at the exact number of reviews that the book received. The highest number of reviews received was by the bestseller of 2011 and 2014 - Jesus Calling: Enjoying Peace in His Presence (with Scripture References)	by Sarah Young. One thing we can deduct from observing the number of reviews of each bestseller is that reviews do play some role when it comes to consumers buying books from Amazon since almost all the bestsellers have received at least 5000 reviews. The only exception is Percy Jackson and the Olympians Paperback Boxed Set (Books 1-3)	by Rick Riordan which received only 548 reviews and still managed to be a best-seller. 
+
+To summarize, Amazon's best sellers are not necessarily the most popular books of the world. Amazon book consumers tend to buy books which are relatively less expensive and their decision is somewhat influenced by the number of reviews that the books get. Lastly, over the last decade, there have been more Fiction consumers than Non-Fiction consumers who purchased books from Amazon. 
+
+
+
+
